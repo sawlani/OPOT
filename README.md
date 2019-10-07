@@ -27,4 +27,5 @@ Latest version in OTML_19_paper.pdf.
 OTML_19_paper.pdf also compared with
 + https://github.com/JasonAltschuler/OptimalTransportNIPS17 
 + https://github.com/nathaniellahn/CombinatorialOptimalTransport
+
 Due to MATLAB licensing issues, we are in the process of figuring out how run these on the same machine.
