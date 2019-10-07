@@ -4,7 +4,7 @@ Data files for comparing optimal transport algorithms
 At the moment it's a minimalistic data set for comparing
 dense optimal transport in single processor settings.
 We plan to support Octave (open source MATLAB)
-and GPUS in the near future.
+and GPUs in the near future.
 
 We also plan to eventually expand the data set to include,
 in order of priority:
@@ -20,7 +20,8 @@ in order of priority:
 
 ## Summary of Results
 
-See OTML_19_paper.pdf
+In progress.
+Latest version in OTML_19_paper.pdf.
 
 ## More Methods Compared
 OTML_19_paper.pdf also compared again
