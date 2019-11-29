@@ -17,6 +17,8 @@ int temp;
 int a[MAXNM][MAXNM];
 
 int main() {
+	printf("Reading input graph...");
+	
 	scanf("%d%d", &n, &m);
 	for (int i = 1; i <= n; ++i) {
 		scanf("%d", &temp);
@@ -24,19 +26,15 @@ int main() {
 	for (int j = 1; j <= m; ++j) {
 		scanf("%d", &temp);
 	}
-	int divisor = 1;
 	for (int i = 1; i <= n; ++i) {
 		for (int j = 1; j <= m; ++j) {
 			scanf("%d", &a[i][j]);
-			a[i][j] /= divisor;
-			if ( divisor == 1000){
-			  a[i][j] *= 1000;			  
-			  a[i][j] += rand()%1000;
-			}
 		}
 	}
+	printf("Done!\n");
 	
-	//clock_t time1 = clock();
+	printf("Computing minimum cost perfect matching...");
+	
 	auto t1 = std::chrono::high_resolution_clock::now();
 	vector<int> u (n+1), v (m+1), p (m+1), way (m+1);
 	for (int i=1; i<=n; ++i) {
@@ -73,9 +71,9 @@ int main() {
 	for (int j = 1; j <= m; ++j) {
 		total_cost += a[p[j]][j];
 	}
-
-	//printf("clock() = %d seconds\n", (clock()-time1)/(double)CLOCKS_PER_SEC );
-	printf( "Time: %f\n", std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count());
-	printf("total = %d\n", total_cost);
+	printf("Done!\n");
+	
+	printf("Time: %f seconds\n", std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count());
+	printf("Optimal cost: %d\n", total_cost);
 	return 0;
 }

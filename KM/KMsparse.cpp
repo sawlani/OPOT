@@ -27,32 +27,19 @@ int to[MAXNM], from[MAXNM];
 int d[MAXNM];
 char vis[MAXNM];
 
-double besttime, bestDIV;
-int bestcost;
 
 #define FR(i, a, b) for(int i=(a); i<(b); i++) 
 #define FOR(i, n) FR(i, 0, n) 
 
-template <typename T> inline void SetMin(T &a, T b) {if(b < a) a = b;}
-template <typename T> inline void SetMax(T &a, T b) {if(b > a) a = b;}
-clock_t time1;
 double r[MAXNM], c[MAXNM];
 double cost[MAXNM][MAXNM];
 int niter = 0;
 
-double ACC = 0.1;
-int DIV;
-double OPT = -1;
 double Eval() {	
-	//int unmatched = 0;
 	double total_cost = 0;
 	FOR(i, n) {
-		//if(to[i] == -1) unmatched++;
 		total_cost += cost[i][to[i]];
 	}
-	//printf("%d UNMATCHED\n", unmatched);
-	//printf("total = %lf\n", total_cost);
-	//fflush(stdout);
 	return total_cost;
 }
 
@@ -77,27 +64,44 @@ int DFS(int i) {
 	}
 	return 0;
 }
-//int LIM = 1000;
-typedef double D;
 
 int main(int argc, char ** argv) {
+	
+	clock_t time1, time2;
+	double besttime;
+	int bestcost, bestDIV;
+
+	printf("Reading input graph...");
+	
 	scanf("%d%d", &n, &m);
 	FOR(i, n) scanf("%lf", &r[i]);
 	FOR(j, m) scanf("%lf", &c[j]);
 	FOR(i,n) FOR(j, m) scanf("%lf", &cost[i][j]);
-	//puts("DONE WITH IO");
+	
+	printf("Done!\n");
+	
+	double ACC = 0.1;
+	int DIV = 500000;
+	double OPT = -1;
+	
 	if(argc >= 2) {
 		sscanf(argv[1], "%lf", &OPT);
 	}
 	if(argc >= 3) {
 		sscanf(argv[2], "%lf", &ACC);
 	}
+	if(argc >= 4) {
+		sscanf(argv[3], "%d", &DIV);
+	}
 
-	D le = 1, ri = 1000000;
+	printf("Computing minimum cost perfect matching, binary searching on DIV:\n");
+		
+	double le = 1, ri = 2*DIV;
 	while(ri - le > 0.01*le) {
-		D mid = (le + ri) / 2;
+		double mid = (le + ri) / 2;
 		niter = 0;
 		DIV = mid;
+		printf("%d|", DIV);
 		time1 = clock();
 		FOR(i, n) x[i] = 0;
 		FOR(j, m) y[j] = 0;
@@ -108,10 +112,7 @@ int main(int argc, char ** argv) {
 		FOR(j, m) from[j] = -1;
 		int matched = 0;
 
-		int iter = 0;
-
 		while(matched < n) {
-			//printf("--iteration %d:::", ++iter);
 			niter++;
 			et = 0;
 			FOR(i, n) {
@@ -121,7 +122,7 @@ int main(int argc, char ** argv) {
 				}
 			}
 			estart[n] = et;
-			//printf("%d admissible arcs, ", et);
+			
 			int progress = 1;
 			while(progress) {
 				progress = 0;
@@ -135,23 +136,23 @@ int main(int argc, char ** argv) {
 				x[i]++;
 				if(to[i] != -1) y[to[i]]--;
 			}
-			//printf("%d matched, time = %lfs\n", matched, ((clock() - time1)/(double)CLOCKS_PER_SEC)); //break;
 		}
-		//printf("clock() = %lf seconds\n", (clock()-time1)/(double)CLOCKS_PER_SEC );
+		
+		time2 = clock();
 		
 		double res = Eval(); 
-		//cout << mid << ' ' << res <<  ' ' << res/OPT << endl;
+		
 		if(abs(res - OPT) / OPT > ACC) {
-			ri = mid;
+			ri = DIV;
 		}
 		else {
-			bestDIV = mid;
-			besttime = (clock() - time1) / (double)CLOCKS_PER_SEC;
+			bestDIV = DIV;
+			besttime = (time2 - time1) / (double)CLOCKS_PER_SEC;
 			bestcost = res;
 			le = mid;
 		}
 		if(OPT == -1) break;
 	}
-	printf("%d %lf %lf\n", bestcost, besttime, bestDIV);
+	printf("\nCost of perfect matching: %d\nTime taken: %lf seconds\nDivisor used: %d\n", bestcost, besttime, bestDIV);
 	return 0;
 }
